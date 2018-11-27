@@ -1,22 +1,26 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Les données mobilité</h1>
+    <MobilityGraph />
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import MobilityGraph from './components/MobilityGraph.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    MobilityGraph
   }
 }
 </script>
 
 <style>
+  @import "https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css";
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
