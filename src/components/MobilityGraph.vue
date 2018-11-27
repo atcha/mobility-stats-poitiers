@@ -3,7 +3,12 @@
         <div class="stats-container panel">
             <h2>Les stationnements vélo sur Poitiers : </h2>
             <div class="map-container">
-                <div id="mapCyclePark" style="height: 400px;"></div>
+                <iframe src="https://data.grandpoitiers.fr/explore/embed/dataset/mobilite-stationnement-velos-grand-poitiers-donnees-metiers/map/?location=16,46.58652,0.34398&basemap=jawg.streets&static=false&datasetcard=true&scrollWheelZoom=false"
+                        width="100%"
+                        height="500"
+                        frameborder="0">
+                </iframe>
+                <!--<div id="mapCyclePark" style="height: 400px;"></div>-->
             </div>
             <div class="stats-table">
                 <table>
@@ -25,24 +30,26 @@
             </div>
         </div>
         <div class="stats-container panel">
-            <h2>Les stationnements vélo sur Poitiers : </h2>
+            <h2>Les parkings sur Poitiers : </h2>
             <div class="map-container">
-                test
+                <iframe src="https://data.grandpoitiers.fr/explore/embed/dataset/mobilite-parkings-grand-poitiers-donnees-metiers/map/?disjunctive.nom_du_parking&location=13,46.57762,0.34598&basemap=jawg.streets&static=false&datasetcard=true&scrollWheelZoom=false"
+                        width="100%"
+                        height="500"
+                        frameborder="0">
+                </iframe>
             </div>
             <div class="stats-table">
                 <table>
                     <thead>
                     <tr>
                         <th>Nombre de parking</th>
-                        <th>Nombre total de place</th>
-                        <th>Nombre moyen de place par parking</th>
+                        <th>Nombre total de place voiture</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td>{{ tableCyclePark.nbParking }}</td>
                         <td>{{ tableCyclePark.nbTotalPlace }}</td>
-                        <td>{{ tableCyclePark.nbMoyPlace }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -67,6 +74,10 @@
                     nbTotalPlace: 0,
                     nbMoyPlace: 0
                 },
+                tableCarPark: {
+                  nbParking: 0,
+                  nbTotalPlace: 0
+                },
                 mapCyclePark: null,
                 nbCyclePark: 0
             }
@@ -74,48 +85,66 @@
         props: {
         },
         mounted: function() {
-            mapboxgl.accessToken = publicKey;
-            this.mapCyclePark = new mapboxgl.Map({
-                container: 'mapCyclePark',
-                center: [0.340375, 46.580224],
-                zoom: 14,
-                style: 'mapbox://styles/mapbox/streets-v9'
-            })
-            this.mapCyclePark.addControl(new mapboxgl.NavigationControl())
-            this.mapCyclePark.resize()
+            // mapboxgl.accessToken = publicKey;
+            // this.mapCyclePark = new mapboxgl.Map({
+            //     container: 'mapCyclePark',
+            //     center: [0.340375, 46.580224],
+            //     zoom: 14,
+            //     style: 'mapbox://styles/mapbox/streets-v9'
+            // })
+            // this.mapCyclePark.addControl(new mapboxgl.NavigationControl())
+            // this.mapCyclePark.resize()
             // get the cycle park from poitiers
             this.getCyclePark()
+            this.getCarPark()
 
         },
         methods: {
             getCyclePark() {
                 axios.get('https://data.grandpoitiers.fr/api/records/1.0/search/?dataset=mobilite-stationnement-velos-grand-poitiers-donnees-metiers&facet=etat&rows=1000')
                     .then((resultCyclePark) => {
-                        console.log(resultCyclePark)
                         this.tableCyclePark.nbParking = resultCyclePark.data.nhits
                         this.cycleParkDatas = resultCyclePark
                         this.cycleParkDatas.data.records.map((record) => {
-                            let localisation = record.fields.localisation
-                            let typeStationnement = record.fields.type_stationnement
-                            let nbPlaces = record.fields.places
-                            let html = ''
+                            // let localisation = record.fields.localisation
+                            // let typeStationnement = record.fields.type_stationnement
+                            // let nbPlaces = record.fields.places
+                            // let html = ''
                             this.tableCyclePark.nbTotalPlace += record.fields.places
-                            if(localisation) html += '<p>Lieu : ' + localisation + '</p>'
-                            if(typeStationnement) html += '<p> Type stationnement : ' + typeStationnement + '</p>'
-                            if(nbPlaces) html += '<p> Nb places : ' + nbPlaces + '</p>'
-                            let popup = new mapboxgl.Popup()
-                                .setLngLat(record.geometry.coordinates)
-                                .setHTML(html)
-                                .addTo(this.mapCyclePark)
-
-                            let marker = new mapboxgl.Marker()
-                                .setLngLat(record.geometry.coordinates)
-                                .addTo(this.mapCyclePark)
-                                .setPopup(popup)
+                            // if(localisation) html += '<p>Lieu : ' + localisation + '</p>'
+                            // if(typeStationnement) html += '<p> Type stationnement : ' + typeStationnement + '</p>'
+                            // if(nbPlaces) html += '<p> Nb places : ' + nbPlaces + '</p>'
+                            // let popup = new mapboxgl.Popup()
+                            //     .setLngLat(record.geometry.coordinates)
+                            //     .setHTML(html)
+                            //     .addTo(this.mapCyclePark)
+                            //
+                            // let marker = new mapboxgl.Marker()
+                            //     .setLngLat(record.geometry.coordinates)
+                            //     .addTo(this.mapCyclePark)
+                            //     .setPopup(popup)
 
 
                         })
                         this.tableCyclePark.nbMoyPlace = Math.round(this.tableCyclePark.nbTotalPlace / this.tableCyclePark.nbParking)
+                    })
+            },
+            getCarPark() {
+                axios.get('https://data.grandpoitiers.fr/api/records/1.0/search/?dataset=mobilite-parkings-grand-poitiers-donnees-metiers&facet=nom_du_parking&facet=zone_tarifaire&facet=statut2&facet=statut3&rows=1000')
+                    .then((resultCarPark) => {
+                        console.log(resultCarPark)
+                        let typeCar = resultCarPark.data.records.map((typeCar) => {
+                            let objCarPark = {}
+                            if(typeCar.fields.type_place === 'TOTAL_PLACES') {
+                                objCarPark.nomParking = typeCar.fields.nom_du_parking
+                                objCarPark.zoneTarifaire = typeCar.fields.zone_tarifaire
+                                objCarPark.typeParking = typeCar.fields.statut + ' ' + typeCar.fields.statut2 + ' ' + typeCar.fields.statut3
+                                objCarPark.nbPlaces = typeCar.fields.nombre
+                                console.log(objCarPark)
+                                return objCarPark
+                            }
+                        })
+                        // console.log(typeCar)
                     })
             }
         }
