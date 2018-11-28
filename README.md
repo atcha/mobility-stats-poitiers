@@ -2,7 +2,8 @@
 
 ## Explanation
 ```
-This project is using Open data Api/plateform from Grand Poitiers to display differents informations about transport, cycle park, car park etc.
+This project is using Open data Api/plateform from Grand Poitiers 
+to display differents informations about transport, cycle park, car park etc.
 
 He is using Vue.js and VueCli3
 ```
