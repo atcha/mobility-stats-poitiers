@@ -17,7 +17,6 @@
                             <th>Nombre de parking</th>
                             <th>Nombre total de place</th>
                             <th>Nombre moyen de place par parking</th>
-                            <th>test-multiuser-again</th>
                         </tr>
                     </thead>
                     <tbody>
