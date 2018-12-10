@@ -1,4 +1,12 @@
-# mobility-report
+# Poitiers mobility report
+
+## Explanation
+```
+This project is using Open data Api/plateform from Grand Poitiers 
+to display differents informations about transport, cycle park, car park etc.
+
+He is using Vue.js and VueCli3
+```
 
 ## Project setup
 ```
